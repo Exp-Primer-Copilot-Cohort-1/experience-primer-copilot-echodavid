@@ -1,21 +1,25 @@
-// Create a web server that can respond to requests for comments
-// from a specific post
-// 1. Create an express web server
-// 2. Create an endpoint for fetching a list of comments for a post
-// 3. Setup a "start" script and "start" it
+// Create a web server
+// 1. send back json and handle 404
 
-const express = require('express');
-const axios = require('axios');
+const http = require('http')
+const url = require('url')
 
-const app = express();
+const server = http.createServer((req, res) => {
+    const pathName = req.url
 
-app.get('/comments', async (req, res) => {
-  const { data } = await axios.get(
-    'https://jsonplaceholder.typicode.com/comments'
-  );
-  res.send(data);
-});
+    if (pathName === '/' || pathName === '/overview') {
+        res.end('This is the overview')
+    } else if (pathName === '/product') {
+        res.end('This is the product')
+    } else {
+        res.writeHead(404, {
+            'Content-type': 'text/html',
+            'my-own-header': 'hello-world'
+        })
+        res.end('<h1>Page not found!</h1>')
+    }
+})
 
-app.listen(4001, () => {
-  console.log('Listening on 4001');
-});
+server.listen(8000, 'git')
+
+
