@@ -1,25 +1,27 @@
-// Create a web server
-// 1. send back json and handle 404
+// Create web server for comments
 
-const http = require('http')
-const url = require('url')
+// Import modules
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const morgan = require('morgan');
 
-const server = http.createServer((req, res) => {
-    const pathName = req.url
+// Create express app
+const app = express();
 
-    if (pathName === '/' || pathName === '/overview') {
-        res.end('This is the overview')
-    } else if (pathName === '/product') {
-        res.end('This is the product')
-    } else {
-        res.writeHead(404, {
-            'Content-type': 'text/html',
-            'my-own-header': 'hello-world'
-        })
-        res.end('<h1>Page not found!</h1>')
-    }
-})
+// Use modules
+app.use(morgan('combined'));
+app.use(bodyParser.json());
+app.use(cors());
 
-server.listen(8000, 'git')
+// Create route
+app.post('/comment', (req, res) => {
+    const comment = req.body.comment;
+    console.log(comment);
+    res.send({
+        message: `Your comment: ${comment} was successfully stored!`
+    });
+});
 
-
+// Start server
+app.listen(process.env.PORT || 8081);
